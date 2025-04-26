@@ -27,8 +27,8 @@ public:
 
 
 private:
-	T* m_data;
-	std::size_t m_sizeX, m_sizeY;
+	T* m_data = nullptr;
+	std::size_t m_sizeX = 0, m_sizeY = 0;
 };
 
 
@@ -103,4 +103,10 @@ std::size_t Matrix<T>::sizeY() const {
 template <typename T>
 T* Matrix<T>::operator[](const std::size_t index) {
 	return(&m_data[index * m_sizeY]);
+}
+
+template <typename T>
+void Matrix<T>::resize(const std::size_t newSizeX, const std::size_t newSizeY) {
+	delete[] m_data;
+	m_data = new T[newSizeX * newSizeY];
 }

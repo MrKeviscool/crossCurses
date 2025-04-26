@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "Matrix.hpp"
+#include "ScreenBuffer.hpp"
 
 struct Event;
 
