@@ -2,8 +2,8 @@
 
 bool ScreenBuffer::initalised = false; ScreenBuffer ScreenBuffer::screenbuffer;
 
-ScreenBuffer& ScreenBuffer::createScrBuffInstance(const short width, const short height) {
-	if (!width || !height) throw std::length_error("cannot have a size of 0");
+ScreenBuffer* ScreenBuffer::createScrBuffInstance(const short width, const short height) {
+	if (width < 0 || height < 0) throw std::length_error("cannot have negative size");
 
 	initalised = true;
 
@@ -15,12 +15,12 @@ ScreenBuffer& ScreenBuffer::createScrBuffInstance(const short width, const short
 	screenbuffer.m_characters.fill(AttrChar{ ' ', 0 });
 	screenbuffer.resetChangedMatrix();
 
-	return screenbuffer;
+	return &screenbuffer;
 }
 
-ScreenBuffer& ScreenBuffer::getScrBuffInstance() {
+ScreenBuffer* ScreenBuffer::getScrBuffInstance() {
 	if (!initalised) throw std::logic_error("error. un-initialised ScreenBuffer");
-	return screenbuffer;
+	return &screenbuffer;
 }
 
 void ScreenBuffer::resetChangedMatrix() {

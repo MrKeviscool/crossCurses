@@ -9,8 +9,8 @@ struct AttrChar {
 
 class ScreenBuffer {
 public:
-	static ScreenBuffer& getScrBuffInstance();
-	static ScreenBuffer& createScrBuffInstance(const short width, const short height);
+	static ScreenBuffer* getScrBuffInstance();
+	static ScreenBuffer* createScrBuffInstance(const short width, const short height);
 
 	void resetChangedMatrix();
 	short getSizeX() const;
