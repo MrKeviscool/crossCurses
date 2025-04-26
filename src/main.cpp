@@ -1,18 +1,28 @@
 #include <iostream>
 #include <vector>
 
+#include "Matrix.hpp"
+
+struct Event;
+
 void initaliseConsole();
 void setConsoleTitle(const char* title);
 void setCursorPos(const short x, const short y);
 void writeText(const char* text, const unsigned long amountToWrite);
+std::vector<Event> pollEvents();
+void writeChar(const char letter);
+void refresh();
 
 #ifdef __linux__
-//void writeText(const char* text); 
+void writeText(const char* text); 
 #endif
 
+#ifndef DEFINED_VEC2
 struct Vec2 {
 	short x, y;
 };
+#define DEFINED_VEC2
+#endif
 
 struct Event {
 
@@ -68,9 +78,9 @@ namespace win {
 };
 
 #undef STD_OUTPUT_HANDLE
-#define STD_OUTPUT_HANDLE (win::DWORD)-11
+#define STD_OUTPUT_HANDLE 4294967285U
 #undef STD_INPUT_HANDLE
-#define STD_INPUT_HANDLE (win::DWORD)-10
+#define STD_INPUT_HANDLE 4294967286U
 
 #define THROW_WINERROR() {std::cerr << "error in \"" << __func__ << "\", error code: " << win::GetLastError() << '\n'; throw std::exception();}
 
@@ -79,9 +89,12 @@ win::CONSOLE_SCREEN_BUFFER_INFO scrBuffInfo;
 
 void initaliseConsole() {
 	stdOutHandle = win::GetStdHandle(STD_OUTPUT_HANDLE);
+	if (win::GetLastError())
+		THROW_WINERROR();
 	stdInHandle = win::GetStdHandle(STD_INPUT_HANDLE);
 	if (win::GetLastError())
 		THROW_WINERROR();
+
 	if (!win::GetConsoleScreenBufferInfo(stdOutHandle, &scrBuffInfo))
 		THROW_WINERROR();
 	if (!win::SetConsoleMode(
@@ -152,6 +165,10 @@ std::vector<Event> pollEvents() {
 			const char gotChar = curRec.Event.KeyEvent.uChar.AsciiChar;
 			curEvent.keyEventData.character = (curEvent.ctrl && gotChar ? gotChar + controlOffset : gotChar); //got char is 0 if its ctrl so we dont ajust for ctrl adding 96
 			if (curEvent.keyEventData.character == VK_RETURN) curEvent.keyEventData.character = '\n';
+			else if (curEvent.keyEventData.character == VK_BACK) {
+				curEvent.keyEventData.character = 0;
+				writeText("\b \b", 3);
+			}
 		}
 		else if (curRec.EventType == MOUSE_EVENT) {
 			curEvent.eventType = Event::EventType::mouse;
@@ -189,6 +206,22 @@ std::vector<Event> pollEvents() {
 	}
 
 	return out;
+}
+
+void writeChar(const char letter) {
+	const bool result = win::WriteConsoleA(
+		stdOutHandle,
+		&letter,
+		1,
+		NULL,
+		NULL
+	);
+	if (!result)
+		THROW_WINERROR();
+}
+
+void refresh() {
+
 }
 
 #elif __linux__
