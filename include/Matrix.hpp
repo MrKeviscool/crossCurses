@@ -14,8 +14,8 @@ public:
 	Matrix(const Matrix& other);
 	Matrix(Matrix&& other);
 	
-	void operator=(const Matrix& other);
-	void operator=(Matrix&& other);
+	void operator=(const Matrix& other) noexcept;
+	void operator=(Matrix&& other) noexcept;
 
 	void fill(const T& fillData);
 	T* operator[](const std::size_t index);
@@ -61,7 +61,7 @@ Matrix<T>::Matrix(Matrix<T>&& other) {
 }
 
 template <typename T>
-void Matrix<T>::operator=(const Matrix<T>& other) {
+void Matrix<T>::operator=(const Matrix<T>& other) noexcept {
 	m_sizeX = other.sizeX;
 	m_sizeY = other.sizeY;
 	m_data = new T[m_sizeX * m_sizeY];
@@ -70,7 +70,7 @@ void Matrix<T>::operator=(const Matrix<T>& other) {
 }
 
 template <typename T>
-void Matrix<T>::operator=(Matrix<T>&& other) {
+void Matrix<T>::operator=(Matrix<T>&& other) noexcept {
 	m_sizeX = other.m_sizeX;
 	m_sizeY = other.m_sizeY;
 

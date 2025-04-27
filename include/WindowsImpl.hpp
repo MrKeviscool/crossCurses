@@ -1,3 +1,3 @@
 #pragma once
-#include "CrossCursesBase.hpp"
+#include "CrossCurses.hpp"
 #include "ScreenBuffer.hpp"
