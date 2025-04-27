@@ -1,40 +1,28 @@
-#include <stdexcept>
-
-#include <Matrix.hpp>
-
-struct AttrChar {
-	char character;
-	short attributes;
-};
+#pragma once
+#include "Matrix.hpp"
 
 class ScreenBuffer {
 public:
-	static ScreenBuffer* getScrBuffInstance();
-	static ScreenBuffer* createScrBuffInstance(const short width, const short height);
 
-	void resetChangedMatrix();
-	short getSizeX() const;
-	short getSizeY() const;
+	ScreenBuffer() = default;
+	ScreenBuffer(const short sizeX, const short sizeY);
 
-	AttrChar getAttrChar(const short x, const short y) const;
+	char getChar(const short x, const short y) const;
+	short getAttribute(const short x, const short y) const;
+
+	void setChar(const short x, const short y, char character);
+	void setAttribute(const short x, const short y, const short attribute);
+
 	bool getChanged(const short x, const short y) const;
-
-	void setChar(const short x, const short y, const char character);
-	void setAttr(const short x, const short y, const short attr);
-	void setAttrChar(const short x, const short y, const AttrChar attrChar);
+	void resetChangedList();
 
 private:
-	ScreenBuffer(const short width, const short height);
-	ScreenBuffer() = default;
-	void operator=(const ScreenBuffer&) const noexcept {};
-	void operator=(ScreenBuffer&&) const noexcept {};
 
-	static ScreenBuffer screenbuffer;
-	static bool initalised;
+	short sizeX = 0, sizeY = 0;
 
-	Matrix<AttrChar> m_characters;
-	Matrix<bool>  m_changedThisFrame;
-
-	short m_width = 0, m_height = 0;
+	//bool initalised = false;
+	Matrix<char> charMatrix;
+	Matrix<short> attributeMatrix;
+	Matrix<bool> changedMatrix;
 
 };
