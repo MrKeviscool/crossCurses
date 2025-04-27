@@ -12,13 +12,13 @@
 
 #undef STD_OUTPUT_HANDLE
 #define STD_OUTPUT_HANDLE 4294967285U
-#undef STD_INPUT_HANDLE;
+#undef STD_INPUT_HANDLE
 #define STD_INPUT_HANDLE 4294967286U
 
-HANDLE stdOutHandle, stdInHandle;
-Vec2 cursorPos, screenSize;
+static HANDLE stdOutHandle, stdInHandle;
+static Vec2 cursorPos, screenSize;
 
-ScreenBuffer scrBuff;
+static ScreenBuffer scrBuff;
 
 void initaliseConsole() {
 	//initalise std handles
@@ -36,6 +36,8 @@ void initaliseConsole() {
 
 	screenSize.x = scrBuffInfo.dwSize.X;
 	screenSize.y = scrBuffInfo.dwSize.Y;
+
+	scrBuff = ScreenBuffer(screenSize.x, screenSize.y);
 }
 
 void setConsoleTitle(const char* title) {
@@ -58,7 +60,23 @@ void writeText(const char* text) { //maybe make it wrap around instead.
 }
 
 void writeChar(const char character) {
-	if (cursorPos.x == screenSize.x - 1);
+	if (cursorPos.x == screenSize.x - 1) return;
+	scrBuff.setChar(cursorPos.x, cursorPos.y, character);
+}
+
+void refresh() {
+	for (short x = 0; x < screenSize.x; x++) {
+		for (short y = 0; y < screenSize.y; y++) {
+			if (!scrBuff.getChanged(x, y)) continue; //if it didnt change continue
+
+			if (!SetConsoleCursorPosition(stdOutHandle, { x, y }))
+				THROW_WINERR();
+
+			const char displayChar = scrBuff.getChar(x, y);
+			if (!WriteConsoleA(stdOutHandle, &displayChar, 1, NULL, NULL))
+				THROW_WINERR();
+		}
+	}
 }
 
 #endif // _WIN32

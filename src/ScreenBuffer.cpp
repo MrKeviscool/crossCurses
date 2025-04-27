@@ -6,7 +6,9 @@ ScreenBuffer::ScreenBuffer(const short sizeX, const short sizeY) :
 	attributeMatrix(sizeX, sizeY),
 	changedMatrix(sizeX, sizeY)
 {
-	
+	charMatrix.fill(' ');
+	attributeMatrix.fill(0);
+	changedMatrix.fill(false);
 }
 
 char ScreenBuffer::getChar(const short x, const short y) const {
