@@ -1,5 +1,7 @@
 #ifdef _WIN32
-#include "WindowsImpl.hpp"
+#include "CrossCurses.hpp"
+
+#include "ScreenBuffer.hpp"
 
 #include <Windows.h>
 
@@ -64,7 +66,7 @@ void writeChar(const char character) {
 	scrBuff.setChar(cursorPos.x, cursorPos.y, character);
 }
 
-void refresh() {
+void refreshScr() {
 	for (short x = 0; x < screenSize.x; x++) {
 		for (short y = 0; y < screenSize.y; y++) {
 			if (!scrBuff.getChanged(x, y)) continue; //if it didnt change continue

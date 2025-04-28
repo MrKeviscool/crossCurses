@@ -8,11 +8,11 @@ int main() {
 
 	initaliseConsole();
 	setConsoleTitle("testing");
-	for (int i = 0; i < outStr.size(); i++) {
+	for (std::size_t i = 0; i < outStr.size(); i++) {
 		setCursorPos(i, i);
 		writeChar(outStr[i]);
 	}
-	refresh();
+	refreshScr();
 
 
 	std::cin.get();
