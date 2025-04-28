@@ -18,7 +18,7 @@ struct Vec2 {
 
 struct Event {
 
-	enum class EventType {
+	enum class EventType : uint8_t{
 		key,
 		mouse,
 		scrResize,
@@ -36,13 +36,13 @@ struct Event {
 	};
 
 	struct MouseEventData {
-		enum class MouseEventType {
+		enum class MouseEventType : uint8_t {
 			Normal,
 			DoubleClick,
 			Scrolled,
 			MouseMoved
 		};
-		enum class MouseButtonDown {
+		enum class MouseButtonDown : uint8_t {
 			None,
 			Left,
 			Middle,
@@ -63,7 +63,7 @@ struct Event {
 };
 
 struct ConsoleMode {
-	enum class ProccessMode {
+	enum class ProccessMode : uint8_t {
 		Cooked,
 		Rare,
 		Raw
