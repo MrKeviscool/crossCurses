@@ -9,7 +9,7 @@ void setConsoleTitle(const char* title);
 void setCursorPos(const short x, const short y);
 void writeText(const char* string);
 void writeChar(const char character);
-void refresh();
+void refreshScr();
 std::vector<Event> pollEvents();
 
 struct Vec2 {
