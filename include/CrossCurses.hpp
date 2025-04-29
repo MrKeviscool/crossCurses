@@ -2,16 +2,6 @@
 
 #include <vector>
 
-struct Event;
-
-void initaliseConsole();
-void setConsoleTitle(const char* title);
-void setCursorPos(const short x, const short y);
-void writeText(const char* string);
-void writeChar(const char character);
-void refreshScr();
-std::vector<Event> pollEvents();
-
 struct Vec2 {
 	short x, y;
 };
@@ -72,3 +62,26 @@ struct ConsoleMode {
 	bool echo = true;
 	ProccessMode processMode;
 };
+
+struct TextAttribute {
+	enum class Color : uint8_t {
+		Normal,
+		Red,
+		Green,
+		Blue
+	};
+	bool highlighted;
+	bool underlined;
+	Color forgroundColor;
+	Color backgroundColor;
+};
+
+void initaliseConsole();
+void setConsoleTitle(const char* title);
+void setCursorPos(const short x, const short y);
+void writeText(const char* string);
+void writeChar(const char character);
+void refreshScr();
+//void setAttribute(const TextAttrubute attribute, short dinstanceToSet);
+void setAttr(const TextAttribute attribute, short distanceToSet = 1);
+std::vector<Event> pollEvents();

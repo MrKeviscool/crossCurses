@@ -1,5 +1,6 @@
 #pragma once
 #include "Matrix.hpp"
+#include "CrossCurses.hpp"
 
 class ScreenBuffer {
 public:
@@ -8,10 +9,10 @@ public:
 	ScreenBuffer(const short sizeX, const short sizeY);
 
 	char getChar(const short x, const short y) const;
-	short getAttribute(const short x, const short y) const;
+	TextAttribute getAttribute(const short x, const short y) const;
 
 	void setChar(const short x, const short y, char character);
-	void setAttribute(const short x, const short y, const short attribute);
+	void setAttribute(const short x, const short y, const TextAttribute attribute);
 
 	bool getChanged(const short x, const short y) const;
 	void resetChangedList();
@@ -22,7 +23,7 @@ private:
 
 	//bool initalised = false;
 	Matrix<char> charMatrix;
-	Matrix<short> attributeMatrix;
+	Matrix<TextAttribute> attributeMatrix;
 	Matrix<bool> changedMatrix;
 
 };
