@@ -7,7 +7,7 @@ ScreenBuffer::ScreenBuffer(const short sizeX, const short sizeY) :
 	changedMatrix(sizeX, sizeY)
 {
 	charMatrix.fill(' ');
-	attributeMatrix.fill(0);
+	attributeMatrix.fill({false, false, TextAttribute::Color::Normal});
 	changedMatrix.fill(false);
 }
 
@@ -15,7 +15,7 @@ char ScreenBuffer::getChar(const short x, const short y) const {
 	return charMatrix.at(x, y);
 }
 
-short ScreenBuffer::getAttribute(const short x, const short y) const {
+TextAttribute ScreenBuffer::getAttribute(const short x, const short y) const {
 	return attributeMatrix.at(x, y);
 }
 
@@ -24,7 +24,7 @@ void ScreenBuffer::setChar(const short x, const short y, char character) {
 	changedMatrix[x][y] = true;
 }
 
-void ScreenBuffer::setAttribute(const short x, const short y, const short attribute) {
+void ScreenBuffer::setAttribute(const short x, const short y, const TextAttribute attribute) {
 	attributeMatrix[x][y] = attribute;
 	changedMatrix[x][y] = true;
 }

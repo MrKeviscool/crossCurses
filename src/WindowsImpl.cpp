@@ -66,6 +66,21 @@ void writeChar(const char character) {
 	scrBuff.setChar(cursorPos.x, cursorPos.y, character);
 }
 
+short TextAttrToWinAttr(const TextAttribute attribute) {
+	constexpr const short forgroundColors[] = {0, FOREGROUND_RED, FOREGROUND_GREEN, FOREGROUND_BLUE };
+	constexpr const short backgroundColors[] = {0, BACKGROUND_RED, BACKGROUND_GREEN, BACKGROUND_BLUE };
+	const short highlighted = COMMON_LVB_REVERSE_VIDEO;
+	const short underlined = COMMON_LVB_UNDERSCORE;
+
+	short out = forgroundColors[(uint8_t)attribute.forgroundColor] |
+		backgroundColors[(uint8_t)attribute.backgroundColor]; //if textAttrs is normal, set it to 0, else the funny colors
+
+	if (attribute.highlighted) out |= highlighted;
+	if (attribute.underlined) out |= underlined;
+
+	return out;
+}
+
 void refreshScr() {
 	for (short x = 0; x < screenSize.x; x++) {
 		for (short y = 0; y < screenSize.y; y++) {
@@ -74,11 +89,26 @@ void refreshScr() {
 			if (!SetConsoleCursorPosition(stdOutHandle, { x, y }))
 				THROW_WINERR();
 
+			if (!SetConsoleTextAttribute(stdOutHandle, TextAttrToWinAttr(scrBuff.getAttribute(x, y))))
+				THROW_WINERR();
+
 			const char displayChar = scrBuff.getChar(x, y);
 			if (!WriteConsoleA(stdOutHandle, &displayChar, 1, NULL, NULL))
 				THROW_WINERR();
+
+
 		}
 	}
+}
+
+
+
+void setAttr(const TextAttribute attribute, short dinstanceToSet) {
+	if (cursorPos.x + dinstanceToSet > screenSize.x - 1) dinstanceToSet = screenSize.x - 1;
+
+	for (int i = 0; i < dinstanceToSet; i++) 
+		scrBuff.setAttribute(cursorPos.x + i, cursorPos.y, attribute);
+	
 }
 
 #endif // _WIN32
