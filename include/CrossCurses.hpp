@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <cstdint>
 
 struct Vec2 {
 	short x, y;
@@ -8,7 +9,7 @@ struct Vec2 {
 
 struct Event {
 
-	enum class EventType : uint8_t{
+	enum class EventType : std::uint8_t{
 		key,
 		mouse,
 		scrResize,
@@ -26,13 +27,13 @@ struct Event {
 	};
 
 	struct MouseEventData {
-		enum class MouseEventType : uint8_t {
+		enum class MouseEventType : std::uint8_t {
 			Normal,
 			DoubleClick,
 			Scrolled,
 			MouseMoved
 		};
-		enum class MouseButtonDown : uint8_t {
+		enum class MouseButtonDown : std::uint8_t {
 			None,
 			Left,
 			Middle,
@@ -53,7 +54,7 @@ struct Event {
 };
 
 struct ConsoleMode {
-	enum class ProccessMode : uint8_t {
+	enum class ProccessMode : std::uint8_t {
 		Cooked,
 		Rare,
 		Raw
@@ -64,7 +65,7 @@ struct ConsoleMode {
 };
 
 struct TextAttribute {
-	enum class Color : uint8_t {
+	enum class Color : std::uint8_t {
 		Normal,
 		Red,
 		Green,
