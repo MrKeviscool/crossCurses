@@ -10,6 +10,8 @@ void setCursorPos(const short x, const short y);
 void writeText(const char* string);
 void writeChar(const char character);
 void refreshScr();
+void deInitaliseConsole();
+
 std::vector<Event> pollEvents();
 
 struct Vec2 {

@@ -4,9 +4,9 @@
 
 #include <iostream>
 #include <curses.h>
+#include <cstring>
 
-
-#define THROW_CURSERR() {std::cerr << "failed in: " << __func__ << '\n'; throw std::exception();}
+#define THROW_CURSERR() {nocbreak(); endwin(); std::cerr << "failed in: " << __func__ << '\n'; throw std::exception();}
 
 
 WINDOW* window = nullptr;
@@ -22,11 +22,14 @@ void setConsoleTitle(const char* title){
 }
 
 void setCursorPos(const short x, const short y){
-    if(move(x, y) == ERR)
+    if(move(y, x) == ERR)
         THROW_CURSERR();
 }
 
 void writeText(const char* string){
+    int lenOfText = std::strlen(string);
+    // if(lenOfText + window->_curx > window->_maxx)
+
     if(addstr(string) == ERR)
         THROW_CURSERR();
 }
@@ -37,8 +40,13 @@ void writeChar(const char character){
 }
 
 void refreshScr(){
-    refresh();
+    if(refresh() == ERR)
+        THROW_CURSERR();
 }
 
+void deInitaliseConsole(){
+    if(endwin() == ERR)
+        THROW_CURSERR();
+}
 
 #endif
