@@ -102,13 +102,15 @@ void refreshScr() {
 }
 
 
-
 void setAttr(const TextAttribute attribute, short dinstanceToSet) {
 	if (cursorPos.x + dinstanceToSet > screenSize.x - 1) dinstanceToSet = screenSize.x - 1;
 
 	for (int i = 0; i < dinstanceToSet; i++) 
 		scrBuff.setAttribute(cursorPos.x + i, cursorPos.y, attribute);
-	
+}
+
+void setAttr(const TextAttribute attribute){
+	setAttr(attribute, 1);
 }
 
 #endif // _WIN32

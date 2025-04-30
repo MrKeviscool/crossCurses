@@ -9,11 +9,12 @@ int main() {
 	initaliseConsole();
 	setConsoleTitle("testing");
 	for (std::size_t i = 0; i < outStr.size(); i++) {
-		static bool red = true;
+		static int colIndex = (int)TextAttribute::Color::Red;
 		setCursorPos(i, i);
-		setAttr(TextAttribute{ false, false, (red? TextAttribute::Color::Red : TextAttribute::Color::Green) , TextAttribute::Color::Normal});
-		red = !red;
+		setAttr(TextAttribute{ false, false, (TextAttribute::Color)colIndex, TextAttribute::Color::Normal});
 		writeChar(outStr[i]);
+		if(colIndex == (int)TextAttribute::Color::Blue) colIndex = (int)(TextAttribute::Color::Red)-1;
+		colIndex++;
 	}
 	refreshScr();
 

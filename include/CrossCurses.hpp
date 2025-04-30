@@ -84,5 +84,6 @@ void writeText(const char* string);
 void writeChar(const char character);
 void refreshScr();
 void deInitaliseConsole();
-void setAttr(const TextAttribute attribute, short distanceToSet = 1);
+void setAttr(const TextAttribute attribute, short distanceToSet);
+void setAttr(const TextAttribute attribute);
 std::vector<Event> pollEvents();
