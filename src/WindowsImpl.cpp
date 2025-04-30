@@ -67,7 +67,7 @@ void writeChar(const char character) {
 }
 
 short TextAttrToWinAttr(const TextAttribute attribute) {
-	constexpr const short forgroundColors[] = {0, FOREGROUND_RED, FOREGROUND_GREEN, FOREGROUND_BLUE };
+	constexpr const short forgroundColors[] = {FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE, FOREGROUND_RED, FOREGROUND_GREEN, FOREGROUND_BLUE };
 	constexpr const short backgroundColors[] = {0, BACKGROUND_RED, BACKGROUND_GREEN, BACKGROUND_BLUE };
 	const short highlighted = COMMON_LVB_REVERSE_VIDEO;
 	const short underlined = COMMON_LVB_UNDERSCORE;
@@ -96,7 +96,6 @@ void refreshScr() {
 			if (!WriteConsoleA(stdOutHandle, &displayChar, 1, NULL, NULL))
 				THROW_WINERR();
 
-
 		}
 	}
 }
@@ -111,6 +110,21 @@ void setAttr(const TextAttribute attribute, short dinstanceToSet) {
 
 void setAttr(const TextAttribute attribute){
 	setAttr(attribute, 1);
+}
+
+void clearConsole() {
+	const char clearSequence[] = "\x1b[2J";
+	const uint8_t clearSeqSize = sizeof("\x1b[2J");
+
+	if (!WriteConsoleA(stdOutHandle, clearSequence, clearSeqSize, NULL, NULL))
+		THROW_WINERR();
+}
+
+void deInitaliseConsole() {
+	if (!SetConsoleTextAttribute(stdOutHandle, TextAttrToWinAttr({ false, false, TextAttribute::Color::Normal, TextAttribute::Color::Normal })))
+		THROW_WINERR();
+	//clearConsole();
+	//SetCursorPos(0, 0);
 }
 
 #endif // _WIN32
