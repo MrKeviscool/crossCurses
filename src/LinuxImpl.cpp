@@ -2,6 +2,7 @@
 
 #include "CrossCurses.hpp"
 #include "ColorPair.hpp"
+#include "Matrix.hpp"
 
 #include <curses.h>
 
@@ -15,8 +16,14 @@
 
 WINDOW* window = nullptr;
 
-attr_t attributesToAdd = 0;
-uint8_t activePair = 0;
+Matrix<ColIndexAttr> screenAttrs;
+
+
+Vec2 getCursorPos(){
+    Vec2 out;
+    getyx(window, out.y, out.x);
+    return out;
+}
 
 void initaliseConsole(){
     window = initscr();
@@ -29,6 +36,10 @@ void initaliseConsole(){
     }
     if(start_color())
         THROW_CURSERR();
+
+    const Vec2 scrSize {getmaxx(window), getmaxy(window)};
+    screenAttrs.resize(scrSize.x, scrSize.y);
+    screenAttrs.fill({0, 0});
 }
 
 void setConsoleTitle(const char* title){
@@ -47,11 +58,13 @@ void writeText(const char* string){
 }
 
 void writeChar(const char character){
-    const auto curActivePair = activePair;
-    attron(COLOR_PAIR(activePair));
-    if(addch(static_cast<chtype>(character) | attributesToAdd) == ERR)
+    const Vec2 cursorPos = getCursorPos();
+    const ColIndexAttr attrs = screenAttrs.at(cursorPos.x, cursorPos.y);
+
+    attron(COLOR_PAIR(attrs.colIndex));
+    if(addch(static_cast<chtype>(character) | attrs.attr) == ERR)
         THROW_CURSERR();
-    attroff(COLOR_PAIR(activePair));
+    attroff(COLOR_PAIR(attrs.colIndex));
 }
 
 void refreshScr(){
@@ -72,7 +85,9 @@ void setAttr(const TextAttribute attribute){
 
     static std::unordered_set<ColorPair> usedColorPairs;
 
-    attributesToAdd = (attribute.highlighted? highlighted : 0) |
+    ColIndexAttr out;
+
+    out.attr = (attribute.highlighted? highlighted : 0) |
      (attribute.underlined? underlined : 0);
 
     
@@ -93,15 +108,29 @@ void setAttr(const TextAttribute attribute){
         (attribute.backgroundColor != TextAttribute::Color::Normal? forgroundColors[static_cast<uint8_t>(attribute.backgroundColor)] : backgroundNormal));
 
         usedColorPairs.emplace(gennedPair.fg, gennedPair.bg, ajustedUsedColPairSize); //add it to the back of the set
-        activePair = ajustedUsedColPairSize; //set it to the active pair
+        out.colIndex = ajustedUsedColPairSize; //set it to the active pair
     }
     else
-        activePair = foundIndex->index; //else set the found color pair index as the index
+        out.colIndex = foundIndex->index; //else set the found color pair index as the index
+
+    const Vec2 curCursorPos = getCursorPos();
+    screenAttrs[curCursorPos.x][curCursorPos.y] = out;
 
 }
 
 void setAttr(const TextAttribute attribute, short distanceToSet){
-    setAttr(attribute);
+    const Vec2 screenSize {getmaxx(window), getmaxy(window)};
+    const Vec2 originalCursorPos = getCursorPos();
+    if(originalCursorPos.x + distanceToSet >= screenSize.x) distanceToSet = screenSize.x - originalCursorPos.x;
+
+
+    Vec2 curCursorPos = originalCursorPos;
+    for(short i = 0; i < distanceToSet; i++){
+        setAttr(attribute);
+        curCursorPos.x++;
+        setCursorPos(curCursorPos.x, curCursorPos.y);
+    }
+    
 }
 
 #endif

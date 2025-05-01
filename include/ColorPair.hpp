@@ -16,3 +16,8 @@ struct std::hash<ColorPair>{
         return std::hash<uint16_t>{}((static_cast<uint16_t>(colPair.fg)  << 8) | static_cast<uint16_t> (colPair.bg));
     }
 };
+
+struct ColIndexAttr{
+    uint8_t colIndex;
+    unsigned int attr;
+};

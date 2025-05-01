@@ -107,6 +107,7 @@ T* Matrix<T>::operator[](const std::size_t index) {
 
 template <typename T>
 void Matrix<T>::resize(const std::size_t newSizeX, const std::size_t newSizeY) {
+	m_sizeX = newSizeX; m_sizeY = newSizeY;
 	delete[] m_data;
 	m_data = new T[newSizeX * newSizeY];
 }
