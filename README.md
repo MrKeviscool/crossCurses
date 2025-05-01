@@ -10,15 +10,15 @@ building for Windows will depend on the Windows library (<Windows.h>) building f
 there will be a CMake put here later as-well as releases. no need for main.cpp, that is a test file
 
 # Usage
-you must initialise the console with initaliseConsole() before any other command you can then set the consoles title with setConsoleTitle if on Windows
+you must initialise the console with `initaliseConsole()` before any other command you can then set the consoles title with `setConsoleTitle` if on Windows
 
-using setCursorPos will set the cursor position for any following text writes. text can be written with writeText or a single character can be written with writeChar
+using `setCursorPos` will set the cursor position for any following text writes. text can be written with `writeText` or a single character can be written with `writeChar`
 
-calling refreshScr() will write the text buffer the console. it only writes what was changed.
+calling `refreshScr()` will write the text buffer the console. it only writes what was changed.
 
-you can set text attributes such as color or boldness with setAttr and passing in a textAttribute type. the textAttribute struct contains two booleans, isHighligted and isUnderlined, self explanatory. it also contains an enum Color that specifies the structs fg and bg fields.
+you can set text attributes such as color or boldness with `setAttr` and passing in a `textAttribute` type. the textAttribute struct contains two booleans, `isHighligted` and `isUnderlined`, self explanatory. it also contains an enum `Color` that specifies the structs fg and bg fields.
 
-make sure to end your program with deInitaliseConsole() to avoid permanent (until console close and re-open) effects.
+make sure to end your program with `deInitaliseConsole()` to avoid potential permanent (until console close and re-open) effects.
 
 enjoy \:)
 
